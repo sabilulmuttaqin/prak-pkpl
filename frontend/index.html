@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Paws Kingdom</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+
+    <!-- Favicon -->
+    <link rel="icon" href="/assets/images/logo.png" type="image/png" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cookie&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Decorative Img -->
+    <img class="gatau" src="./assets/images/kucingloncat.png" alt="Cat" />
+
+    <!-- Header / Navbar -->
+    <header>
+      <div class="nav-kanan">
+        <div class="nav-logo">
+          <h2>
+            <a href="#hero" aria-label="Go to hero">Paws <br />Kingdom</a>
+          </h2>
+        </div>
+        <nav class="nav-item" aria-label="Main Navigation">
+          <ul>
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#tips">Tips</a></li>
+            <li><a href="#service">Services</a></li>
+            <li><a href="#testi">Testimonials</a></li>
+            <li><a href="#bestseller">Product</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="nav-kiri">
+        <button id="cart-button" aria-label="Open cart" data-count="0">
+          <i class="ri-shopping-cart-line"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section id="hero" class="hero" aria-label="Hero">
+      <div class="hero-content">
+        <h1>High Quality <br />Pet Food</h1>
+        <p>Sale up to 40% off today</p>
+        <a href="#bestseller" class="btn">Shop Now</a>
+      </div>
+    </section>
+
+    <div class="container">
+      <main>
+        <!-- Popular brand marquee -->
+        <section
+          id="popular-brand"
+          class="popular-brand"
+          aria-label="Popular brands"
+        >
+          <marquee direction="right">
+            <div class="brand-container">
+              <div class="brand-item">
+                <img
+                  src="./assets/images/brand/brand1.jpg"
+                  alt="Brand 1"
+                  loading="lazy"
+                />
+              </div>
+              <div class="brand-item">
+                <img
+                  src="./assets/images/brand/brand2.png"
+                  alt="Brand 2"
+                  loading="lazy"
+                />
+              </div>
+              <div class="brand-item">
+                <img
+                  src="./assets/images/brand/brand3.jpg"
+                  alt="Brand 3"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          </marquee>
+        </section>
+
+        <!-- Dynamic Products -->
+        <section
+          id="bestseller"
+          class="best-seller-section"
+          aria-labelledby="best-title"
+        >
+          <h2 id="best-title" class="section-title">
+            Our <span class="highlight">Product</span>
+          </h2>
+
+          <!-- Search -->
+          <input
+            type="text"
+            id="search-input"
+            class="search-bar"
+            placeholder="Search products..."
+            aria-label="Search products"
+          />
+
+          <!-- List rendered via JS from Laravel APIs -->
+          <div id="product-list" class="product-list" aria-live="polite"></div>
+        </section>
+
+        <!-- Categories -->
+        <!-- <section class="category" aria-labelledby="category-title">
+          <h2 id="category-title"><span>Top</span> Categories</h2>
+          <div class="category-list">
+            <div class="category-item">
+              <img
+                src="./assets/images/category/kategori.png"
+                alt="Cat Food"
+                loading="lazy"
+              />
+              <h3>Cat Food</h3>
+            </div>
+            <div class="category-item">
+              <img
+                src="./assets/images/category/suplemen.png"
+                alt="Cat Supplement"
+                loading="lazy"
+              />
+              <h3>Cat Suplement</h3>
+            </div>
+            <div class="category-item">
+              <img
+                src="./assets/images/category/toys.png"
+                alt="Cat Toys"
+                loading="lazy"
+              />
+              <h3>Cat Toys</h3>
+            </div>
+          </div>
+        </section> -->
+
+        <!-- Services -->
+        <section
+          id="service"
+          class="pet-services-section"
+          aria-labelledby="service-title"
+        >
+          <img
+            src="./assets/images/logo1.png"
+            width="100"
+            alt="Logo"
+            loading="lazy"
+          />
+          <div class="intro-text">
+            <h2 id="service-title">
+              <span class="highlight">What your cat needs</span>, when they need
+              it.
+            </h2>
+          </div>
+          <div class="features">
+            <div class="feature-item">
+              <i class="ri-truck-line icon"></i>
+              <h3>Free Same-Day Delivery</h3>
+              <p>
+                Order by 2pm local time to get free delivery on orders $35+
+                today.
+              </p>
+            </div>
+            <div class="feature-item">
+              <i class="ri-refund-2-line icon"></i>
+              <h3>30 Day Return</h3>
+              <p>35% off your first order plus 5% off all future orders.</p>
+            </div>
+            <div class="feature-item">
+              <i class="ri-shield-check-line icon"></i>
+              <h3>Security payment</h3>
+              <p>
+                25% off your online order of $50+. Available at most locations.
+              </p>
+            </div>
+            <div class="feature-item">
+              <i class="ri-customer-service-2-line icon"></i>
+              <h3>24/7 Support</h3>
+              <p>Shop online to get orders over $35 shipped fast and free.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section
+          id="testi"
+          class="testimonial-section"
+          aria-labelledby="testi-title"
+        >
+          <h2 id="testi-title" class="section-title">
+            What Our <span class="highlight">Customers</span> Say
+          </h2>
+          <div class="testimonials">
+            <div class="testimonial-item">
+              <img
+                src="./assets/images/testi/testi1.jpg"
+                alt="Customer 1"
+                loading="lazy"
+              />
+              <p class="testimonial-text">
+                "My cat absolutely loves the food from Paws Kingdom! The quality
+                is amazing, I'm giving my pet the best."
+              </p>
+              <h3 class="customer-name">John Doe</h3>
+            </div>
+            <div class="testimonial-item">
+              <img
+                src="./assets/images/testi/testi2.jpg"
+                alt="Customer 2"
+                loading="lazy"
+              />
+              <p class="testimonial-text">
+                "Fast delivery and excellent customer service. I recommend Paws
+                Kingdom to all my friends who have pets!"
+              </p>
+              <h3 class="customer-name">Jane Smith</h3>
+            </div>
+            <div class="testimonial-item">
+              <img
+                src="./assets/images/testi/testi3.jpg"
+                alt="Customer 3"
+                loading="lazy"
+              />
+              <p class="testimonial-text">
+                "Great selection of toys and treats. My dog is always so excited
+                when a new package arrives!"
+              </p>
+              <h3 class="customer-name">Emily Johnson</h3>
+            </div>
+          </div>
+        </section>
+
+        <!-- Iklan -->
+        <!-- <section id="iklan" class="iklan" aria-label="Taste guarantee section">
+          <div class="iklan-content">
+            <div class="iklan-title">
+              <div class="iklan-logo"><i class="ri-bowl-line"></i></div>
+              <h2>Taste <br />Guarantee</h2>
+            </div>
+            <h1>Taste it, love it or we'll replace it... <br />Guaranteed!</h1>
+            <p>
+              At Petio, we believe your dog and cat will love their food so much
+              that if they don’t … we’ll help you find a replacement. That’s our
+              taste guarantee.
+            </p>
+            <div class="btn">Find out more</div>
+          </div>
+        </section> -->
+
+        <!-- FAQ -->
+        <section id="faq" class="faq-section" aria-labelledby="faq-title">
+          <div class="faq-header">
+            <h2 id="faq-title">
+              <span class="highlight">Frequently</span> Asked Questions
+            </h2>
+            <img
+              src="./assets/images/kucingbingung.png"
+              alt="Confused cat"
+              loading="lazy"
+            />
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              What is Paws Kingdom?
+            </button>
+            <p class="faq-answer" hidden>
+              Paws Kingdom is a dedicated pet store offering high-quality food,
+              toys, and vitamins specifically for cats...
+            </p>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              How can I place an order?
+            </button>
+            <p class="faq-answer" hidden>
+              You can place an order by browsing our shop and adding products to
+              your cart. Checkout is simple and secure.
+            </p>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              What is the return policy?
+            </button>
+            <p class="faq-answer" hidden>
+              We offer a 30-day return policy. If you're not satisfied with your
+              purchase, you can return it within 30 days.
+            </p>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              Do you offer international shipping?
+            </button>
+            <p class="faq-answer" hidden>
+              Currently, we offer shipping only within the country.
+            </p>
+          </div>
+        </section>
+
+        <!-- Tips -->
+        <section id="tips" class="tips-section" aria-labelledby="tips-title">
+          <h2 id="tips-title">
+            <span>Tips</span> & <span>Support</span> for pet
+          </h2>
+          <p>
+            Pet treats packed with nutritious ingredients, vitamins and
+            supplements to help dogs.
+          </p>
+          <div class="tips-cards">
+            <div class="card">
+              <img
+                src="assets/images/tips/tips1.jpg"
+                alt="Pet and owner"
+                loading="lazy"
+              />
+              <h3>Understanding Pet Food Labels</h3>
+              <p>
+                Legos the sky's the limit with inexpensive silicone molds and a
+                little imagination!
+              </p>
+            </div>
+            <div class="card">
+              <img
+                src="assets/images/tips/tips2.jpg"
+                alt="Kid with dog and snacks"
+                loading="lazy"
+              />
+              <h3>Healthy & Fun Frozen Yogurt Snaks!</h3>
+              <p>Legos the sky's the limit with inexpensive.</p>
+            </div>
+            <div class="card">
+              <img
+                src="assets/images/tips/tips3.jpg"
+                alt="Healthy breakfast for pets"
+                loading="lazy"
+              />
+              <h3>Everyday Healthy Breakfast for Healthy Body</h3>
+              <p>Legos the sky's the limit with inexpensive</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" aria-label="Footer">
+      <div class="column">
+        <h4 class="title-footer">Paws Kingdom</h4>
+        <p>
+          is a cat-focused pet shop offering high-quality food, toys, and
+          vitamin. Your cat’s happiness and health are our priority.
+        </p>
+      </div>
+      <div class="column">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#bestseller">Shop</a></li>
+          <li><a href="#testi">Customer Reviews</a></li>
+          <li><a href="#popular-brand">Collections</a></li>
+        </ul>
+      </div>
+      <div class="column">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="#bestseller">Product Overview</a></li>
+          <li><a href="#service">Functions</a></li>
+          <li><a href="#bestseller">App Platform</a></li>
+        </ul>
+      </div>
+      <div class="column">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="#faq">Support</a></li>
+          <li><a href="#faq">System Status</a></li>
+          <li><a href="#faq">Report Issues</a></li>
+          <li><a href="#faq">Share Your Ideas</a></li>
+        </ul>
+      </div>
+    </footer>
+
+    <!-- Floating Cart Modal -->
+    <div
+      id="cart"
+      class="cart"
+      role="dialog"
+      aria-labelledby="cart-title"
+      aria-modal="true"
+    >
+      <h2 id="cart-title">Shopping Cart</h2>
+      <ul id="cart-items"></ul>
+      <button id="clear-cart">Clear Cart</button>
+      <button id="submit-cart">Checkout</button>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="chatbot-widget.css" />
+    <script src="chatbot-widget.js" defer></script>
+  </body>
+</html>
