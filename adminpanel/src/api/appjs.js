@@ -84,25 +84,52 @@ function validateUniqueCode(inputCode) {
 }
 
 // ---------- Register / Login / Logout ----------
-export async function register(username, password, uniqueCode) {
-  const uname = (username || "").trim();
-  const pass = (password || "").trim();
+// Tambahan: email & confirmPassword
+function isEmailValid(email) {
+  const e = (email || "").trim().toLowerCase();
+  // regex sederhana
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(e);
+}
 
-  if (!uname || !pass) throw new Error("Username dan password wajib diisi.");
+export async function register(
+  username,
+  email,
+  password,
+  confirmPassword,
+  uniqueCode
+) {
+  const uname = (username || "").trim();
+  const mail = (email || "").trim().toLowerCase();
+  const pass = (password || "").trim();
+  const pass2 = (confirmPassword || "").trim();
+
+  if (!uname || !mail || !pass || !pass2) {
+    throw new Error(
+      "Username, email, password, dan confirm password wajib diisi."
+    );
+  }
   if (uname.length < 3) throw new Error("Username minimal 3 karakter.");
+  if (!isEmailValid(mail)) throw new Error("Format email tidak valid.");
   if (pass.length < 4) throw new Error("Password minimal 4 karakter.");
+  if (pass !== pass2) throw new Error("Konfirmasi password tidak sama.");
 
   // Validasi dan tandai kode unik
   const validCode = validateUniqueCode(uniqueCode);
 
   const users = readUsers();
-  const exists = users.some((u) => u.usernameLower === uname.toLowerCase());
-  if (exists) throw new Error("Username sudah terdaftar.");
+  const existsUsername = users.some(
+    (u) => u.usernameLower === uname.toLowerCase()
+  );
+  if (existsUsername) throw new Error("Username sudah terdaftar.");
+  const existsEmail = users.some((u) => (u.email || "").toLowerCase() === mail);
+  if (existsEmail) throw new Error("Email sudah terdaftar.");
 
   const passHash = await hashSHA256(pass);
   const newUser = {
     username: uname,
     usernameLower: uname.toLowerCase(),
+    email: mail,
     passHash,
     code: validCode,
     createdAt: new Date().toISOString(),
@@ -116,22 +143,40 @@ export async function register(username, password, uniqueCode) {
   setUsedCodes(used);
 
   // otomatis login
-  setSession({ username: uname, loginAt: new Date().toISOString() });
+  setSession({
+    username: uname,
+    email: mail,
+    loginAt: new Date().toISOString(),
+  });
   return { username: uname };
 }
 
-export async function login(username, password) {
+export async function login(username, email, password) {
   const uname = (username || "").trim();
+  const mail = (email || "").trim().toLowerCase();
   const pass = (password || "").trim();
+
+  if (!uname || !mail || !pass) {
+    throw new Error("Username, email, dan password wajib diisi.");
+  }
+  if (!isEmailValid(mail)) throw new Error("Format email tidak valid.");
 
   const users = readUsers();
   const user = users.find((u) => u.usernameLower === uname.toLowerCase());
   if (!user) throw new Error("User tidak ditemukan.");
 
+  // email harus sama seperti saat signup
+  if ((user.email || "").toLowerCase() !== mail)
+    throw new Error("Email tidak sesuai dengan akun ini.");
+
   const passHash = await hashSHA256(pass);
   if (passHash !== user.passHash) throw new Error("Password salah.");
 
-  setSession({ username: user.username, loginAt: new Date().toISOString() });
+  setSession({
+    username: user.username,
+    email: user.email,
+    loginAt: new Date().toISOString(),
+  });
   return { username: user.username };
 }
 
