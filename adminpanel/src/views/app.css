@@ -1,0 +1,231 @@
+@font-face {
+  font-family: "Fixga";
+  src: url("./assets/Fixga-SemiBold.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Main Login Container */
+.login-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Left Section - Image Side */
+.left-section {
+  background: linear-gradient(135deg, rgb(250, 184, 117) 0%, #f9942a 100%);
+  width: 45%;
+  position: relative;
+  overflow: hidden;
+}
+
+.titlefont {
+  font-family: "Fixga", sans-serif;
+}
+
+.logo-section {
+  z-index: 2;
+  position: relative;
+}
+
+.image-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 1;
+}
+
+/* Right Section - Form Side */
+.right-section {
+  width: 55%;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 420px;
+  padding: 0 1rem;
+}
+
+/* Modern Input Styles */
+.modern-input {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.modern-input:focus {
+  border-color: #f9942a;
+  box-shadow: 0 0 0 3px rgba(249, 148, 42, 0.1);
+  outline: none;
+}
+
+.modern-input.is-invalid {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* Modern Button for Toggle (Login/Register) */
+.modern-btn {
+  border-radius: 8px;
+  padding: 0.5rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  background: #f9942a;
+  border: none;
+  color: white !important;
+}
+
+.modern-btn:hover {
+  background: rgb(243, 132, 13);
+  color: white !important;
+}
+
+/* Modern Button for Submit */
+.modern-btn-submit {
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  background: #f9942a;
+  border: none;
+  color: white;
+}
+
+.modern-btn-submit:hover {
+  background: rgb(243, 132, 13);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(249, 148, 42, 0.3);
+}
+
+.modern-btn-submit:active {
+  transform: translateY(0);
+}
+
+.modern-btn-submit:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Button Group */
+.btn-group .btn {
+  border-radius: 8px;
+  padding: 0.5rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-group .btn-outline-secondary {
+  color: #6b7280;
+  border-color: #e5e7eb;
+  background: white;
+}
+
+.btn-group .btn-outline-secondary:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: #374151;
+}
+
+/* Alerts */
+.alert {
+  border-radius: 8px;
+  border: none;
+}
+
+.alert-danger {
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.alert-success {
+  background: #f0fdf4;
+  color: #166534;
+}
+
+/* Welcome Notification */
+.welcome-notification {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+  font-weight: 500;
+  z-index: 1050;
+  animation: slideInRight 0.5s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Dashboard styles */
+.nav-link.active {
+  background-color: #6c757d;
+  color: white;
+  border-radius: 5px;
+}
+
+body {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Responsive Design */
+@media (max-width: 991px) {
+  .left-section {
+    display: none !important;
+  }
+
+  .right-section {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .form-container {
+    padding: 0 0.5rem;
+  }
+
+  .right-section {
+    padding: 1rem;
+  }
+}
+
+/* Spinner Animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.fa-spinner.fa-spin {
+  animation: spin 1s linear infinite;
+}
