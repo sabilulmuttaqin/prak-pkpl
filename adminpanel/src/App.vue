@@ -3,136 +3,192 @@
     <!-- Auth Form -->
     <div
       v-if="!isAuthenticated"
-      class="login-container d-flex justify-content-center align-items-center w-100 min-vh-100"
+      class="login-container d-flex vh-100 overflow-hidden"
     >
-      <div class="login-card p-5 rounded-4 shadow-lg position-relative">
-        <div class="login-bg-pattern"></div>
-
-        <div class="text-center mb-4">
-          <div class="login-icon mb-3">
-            <i class="fas fa-paw"></i>
-          </div>
-          <h3 class="login-title mb-2">Paws Kingdoms</h3>
-          <p class="login-subtitle">
-            {{
-              isRegisterMode
-                ? "Create an account (kode unik dibutuhkan)"
-                : "Admin Dashboard"
-            }}
-          </p>
-        </div>
-
-        <!-- Switch Mode -->
-        <div class="d-flex justify-content-center mb-3">
-          <div class="btn-group">
-            <button
-              class="btn"
-              :class="!isRegisterMode ? 'btn-primary' : 'btn-outline-primary'"
-              @click="switchMode(false)"
-            >
-              Login
-            </button>
-            <button
-              class="btn"
-              :class="isRegisterMode ? 'btn-primary' : 'btn-outline-primary'"
-              @click="switchMode(true)"
-            >
-              Register
-            </button>
+      <!-- Left Side - Image Section -->
+      <div
+        class="left-section d-none d-lg-flex flex-column justify-content-between p-5"
+      >
+        <div class="logo-section">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-paw text-white fs-3 me-2"></i>
+            <h2 class="text-white titlefont mb-0 fw-bold">Paws Kingdoms</h2>
           </div>
         </div>
 
-        <!-- Username -->
-        <div class="form-floating mb-3">
-          <input
-            v-model="name"
-            type="text"
-            class="form-control custom-input"
-            id="nameInput"
-            placeholder="Enter your name"
+        <div class="image-placeholder">
+          <img src="./assets/cat.jpg" alt="Cat" class="hero-image" />
+        </div>
+      </div>
+
+      <!-- Right Side - Form Section -->
+      <div
+        class="right-section d-flex align-items-center justify-content-center flex-grow-1 bg-white"
+      >
+        <div class="form-container">
+          <!-- Logo for mobile -->
+          <div class="text-center mb-4 d-lg-none">
+            <div class="d-flex align-items-center justify-content-center mb-3">
+              <i class="fas fa-paw text-primary fs-3 me-2"></i>
+              <h2 class="mb-0 fw-bold">Paws Kingdoms</h2>
+            </div>
+          </div>
+
+          <div class="text-center mb-4">
+            <h3 class="fw-bold mb-2">
+              {{ isRegisterMode ? "Sign Up" : "Sign In" }}
+            </h3>
+            <p class="text-muted">
+              {{
+                isRegisterMode
+                  ? "Kode unik dibutuhkan untuk registrasi"
+                  : "Login ke akun anda"
+              }}
+            </p>
+          </div>
+
+          <!-- Switch Mode -->
+          <div class="d-flex justify-content-center mb-4">
+            <div class="btn-group w-100">
+              <button
+                class="btn"
+                :class="
+                  !isRegisterMode ? 'modern-btn' : 'btn-outline-secondary'
+                "
+                @click="switchMode(false)"
+              >
+                Login
+              </button>
+              <button
+                class="btn"
+                :class="isRegisterMode ? 'modern-btn' : 'btn-outline-secondary'"
+                @click="switchMode(true)"
+              >
+                Register
+              </button>
+            </div>
+          </div>
+
+          <!-- Username -->
+          <div class="mb-3">
+            <label for="nameInput" class="form-label text-muted small"
+              >Username</label
+            >
+            <input
+              v-model="name"
+              type="text"
+              class="form-control form-control-lg modern-input"
+              id="nameInput"
+              placeholder="Masukkan Username"
+              :disabled="isLoading"
+              :class="{ 'is-invalid': fieldErrors.name }"
+            />
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label for="emailInput" class="form-label text-muted small"
+              >Email</label
+            >
+            <input
+              v-model="email"
+              type="email"
+              class="form-control form-control-lg modern-input"
+              id="emailInput"
+              placeholder="name@mail.com"
+              :disabled="isLoading"
+              :class="{ 'is-invalid': fieldErrors.email }"
+            />
+          </div>
+
+          <!-- Password -->
+          <div class="mb-3">
+            <label for="passwordInput" class="form-label text-muted small"
+              >Password</label
+            >
+            <input
+              v-model="password"
+              type="password"
+              class="form-control form-control-lg modern-input"
+              id="passwordInput"
+              placeholder="••••••••••"
+              :disabled="isLoading"
+              :class="{ 'is-invalid': fieldErrors.password }"
+            />
+          </div>
+
+          <!-- Confirm Password (Register only) -->
+          <div class="mb-3" v-if="isRegisterMode">
+            <label
+              for="confirmPasswordInput"
+              class="form-label text-muted small"
+              >Confirm Password</label
+            >
+            <input
+              v-model="confirmPassword"
+              type="password"
+              class="form-control form-control-lg modern-input"
+              id="confirmPasswordInput"
+              placeholder="••••••••••"
+              :disabled="isLoading"
+              :class="{ 'is-invalid': fieldErrors.confirmPassword }"
+            />
+          </div>
+
+          <!-- Unique Code (Register only) -->
+          <div class="mb-3" v-if="isRegisterMode">
+            <label for="codeInput" class="form-label text-muted small"
+              >Kode Unik</label
+            >
+            <input
+              v-model="uniqueCode"
+              type="text"
+              class="form-control form-control-lg modern-input"
+              id="codeInput"
+              placeholder="Masukkan kode unik"
+              :disabled="isLoading"
+              :class="{ 'is-invalid': fieldErrors.uniqueCode }"
+            />
+            <small class="text-muted d-block mt-2">
+              Slot tersisa: {{ remainingCodes }} kode.
+            </small>
+          </div>
+
+          <!-- Action Button -->
+          <button
+            class="btn btn-primary btn-lg w-100 mb-3 modern-btn-submit"
+            @click="handleSubmit"
             :disabled="isLoading"
-            :class="{ 'is-invalid': hasError }"
-          />
-          <label for="nameInput">
-            <i class="fas fa-user me-2"></i>Username
-          </label>
-        </div>
+          >
+            <span v-if="!isLoading">
+              {{ isRegisterMode ? "Create Account" : "Log in" }}
+            </span>
+            <span v-else>
+              <i class="fas fa-spinner fa-spin me-2"></i>Processing...
+            </span>
+          </button>
 
-        <!-- Password -->
-        <div class="form-floating mb-3">
-          <input
-            v-model="password"
-            type="password"
-            class="form-control custom-input"
-            id="passwordInput"
-            placeholder="Enter password"
-            :disabled="isLoading"
-            :class="{ 'is-invalid': hasError }"
-          />
-          <label for="passwordInput">
-            <i class="fas fa-lock me-2"></i>Password
-          </label>
-        </div>
+          <!-- Messages -->
+          <div
+            v-if="hasError"
+            class="alert alert-danger d-flex align-items-center"
+            role="alert"
+          >
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <div>{{ errorMessage }}</div>
+          </div>
+          <div
+            v-if="infoMessage && !hasError"
+            class="alert alert-success d-flex align-items-center"
+            role="alert"
+          >
+            <i class="fas fa-check-circle me-2"></i>
+            <div>{{ infoMessage }}</div>
+          </div>
 
-        <!-- Unique Code (Register only) -->
-        <div class="form-floating mb-3" v-if="isRegisterMode">
-          <input
-            v-model="uniqueCode"
-            type="text"
-            class="form-control custom-input"
-            id="codeInput"
-            placeholder="Masukkan kode unik"
-            :disabled="isLoading"
-            :class="{ 'is-invalid': hasError }"
-          />
-          <label for="codeInput">
-            <i class="fas fa-key me-2"></i>Kode Unik
-          </label>
-          <small class="text-muted d-block mt-2">
-            Slot tersisa: {{ remainingCodes }} kode.
-          </small>
-        </div>
-
-        <!-- Action -->
-        <button
-          class="btn btn-login w-100 mb-3 py-3"
-          @click="handleSubmit"
-          :disabled="isLoading"
-        >
-          <span v-if="!isLoading">
-            <i
-              class="fas"
-              :class="isRegisterMode ? 'fa-user-plus' : 'fa-sign-in-alt'"
-            ></i>
-            <span class="ms-2">{{
-              isRegisterMode ? "Create Account" : "Sign In"
-            }}</span>
-          </span>
-          <span v-else>
-            <i class="fas fa-spinner fa-spin me-2"></i>Processing...
-          </span>
-        </button>
-
-        <!-- Messages -->
-        <div
-          v-if="hasError"
-          class="alert alert-danger d-flex align-items-center"
-          role="alert"
-        >
-          <i class="fas fa-exclamation-triangle me-2"></i>
-          <div>{{ errorMessage }}</div>
-        </div>
-        <div
-          v-if="infoMessage && !hasError"
-          class="alert alert-success d-flex align-items-center"
-          role="alert"
-        >
-          <i class="fas fa-check-circle me-2"></i>
-          <div>{{ infoMessage }}</div>
-        </div>
-
-        <div class="text-center mt-3">
-          <small class="text-muted">Kerja yang bener ya - bos 😊.</small>
+          <div class="text-center mt-4">
+            <small class="text-muted">Kerja kerja kerja 😊</small>
+          </div>
         </div>
       </div>
     </div>
@@ -199,16 +255,9 @@
             class="container-fluid d-flex justify-content-between bg-light align-items-center p-3"
           >
             <h1 class="h5 mb-0 font-weight-bold">
-              Welcome, admin {{ currentUsername }} 👋
+              Welcome, {{ currentUsername }} 👋
             </h1>
-            <div class="d-none d-md-block">
-              <!-- <button
-                class="btn btn-danger btn-sm rounded-pill px-3 py-2 d-flex align-items-center justify-content-center"
-                @click="handleLogout"
-              >
-                Logout bro
-              </button> -->
-            </div>
+            <div class="d-none d-md-block"></div>
           </div>
         </header>
 
@@ -250,7 +299,9 @@ export default {
   data() {
     return {
       name: "",
+      email: "",
       password: "",
+      confirmPassword: "",
       uniqueCode: "",
       isAuthenticated: false,
       isRegisterMode: false,
@@ -262,6 +313,13 @@ export default {
       isDarkMode: false,
       currentUsername: "",
       remainingCodes: 0,
+      fieldErrors: {
+        name: false,
+        email: false,
+        password: false,
+        confirmPassword: false,
+        uniqueCode: false,
+      },
     };
   },
   async mounted() {
@@ -276,7 +334,17 @@ export default {
       this.hasError = false;
       this.errorMessage = "";
       this.infoMessage = "";
+      this.resetFieldErrors();
       if (toRegister) this.refreshRemainingCodes();
+    },
+    resetFieldErrors() {
+      this.fieldErrors = {
+        name: false,
+        email: false,
+        password: false,
+        confirmPassword: false,
+        uniqueCode: false,
+      };
     },
     refreshRemainingCodes() {
       this.remainingCodes = availableCodes().length;
@@ -286,20 +354,27 @@ export default {
       this.hasError = false;
       this.errorMessage = "";
       this.infoMessage = "";
+      this.resetFieldErrors();
 
       try {
         if (this.isRegisterMode) {
           if (this.remainingCodes <= 0) {
             throw new Error("Slot admin habis. Tidak bisa mendaftar lagi.");
           }
-          const res = await register(this.name, this.password, this.uniqueCode);
+          const res = await register(
+            this.name,
+            this.email,
+            this.password,
+            this.confirmPassword,
+            this.uniqueCode
+          );
           this.currentUsername = res.username;
           this.isAuthenticated = authStatus();
           this.infoMessage = "Registrasi berhasil. Kamu sudah login.";
           this.showWelcomeNotification();
           this.refreshRemainingCodes();
         } else {
-          const res = await login(this.name, this.password);
+          const res = await login(this.name, this.email, this.password);
           this.currentUsername = res.username;
           this.isAuthenticated = authStatus();
           this.infoMessage = "Login berhasil.";
@@ -307,7 +382,51 @@ export default {
         }
       } catch (err) {
         this.hasError = true;
-        this.errorMessage = err?.message || "Terjadi kesalahan.";
+        const errMsg = err?.message || "Terjadi kesalahan.";
+        this.errorMessage = errMsg;
+
+        // Tentukan field mana yang error berdasarkan pesan error
+        const msgLower = errMsg.toLowerCase();
+
+        if (msgLower.includes("username")) {
+          this.fieldErrors.name = true;
+        }
+        if (msgLower.includes("email")) {
+          this.fieldErrors.email = true;
+        }
+        if (
+          msgLower.includes("password lama") ||
+          (msgLower.includes("password") && msgLower.includes("salah"))
+        ) {
+          this.fieldErrors.password = true;
+        }
+        if (msgLower.includes("password") && msgLower.includes("minimal")) {
+          this.fieldErrors.password = true;
+        }
+        if (
+          msgLower.includes("konfirmasi password") ||
+          msgLower.includes("confirm password")
+        ) {
+          this.fieldErrors.password = true;
+          this.fieldErrors.confirmPassword = true;
+        }
+        if (msgLower.includes("kode unik") || msgLower.includes("kode")) {
+          this.fieldErrors.uniqueCode = true;
+        }
+
+        // Jika error umum atau tidak spesifik, tandai semua field yang terisi
+        if (
+          !msgLower.includes("username") &&
+          !msgLower.includes("email") &&
+          !msgLower.includes("password") &&
+          !msgLower.includes("kode")
+        ) {
+          if (this.name) this.fieldErrors.name = true;
+          if (this.email) this.fieldErrors.email = true;
+          if (this.password) this.fieldErrors.password = true;
+          if (this.confirmPassword) this.fieldErrors.confirmPassword = true;
+          if (this.uniqueCode) this.fieldErrors.uniqueCode = true;
+        }
       } finally {
         this.isLoading = false;
       }
@@ -317,9 +436,12 @@ export default {
       this.isAuthenticated = false;
       this.currentUsername = "";
       this.name = "";
+      this.email = "";
       this.password = "";
+      this.confirmPassword = "";
       this.uniqueCode = "";
       this.infoMessage = "";
+      this.resetFieldErrors();
       this.refreshRemainingCodes();
     },
     showWelcomeNotification() {
@@ -353,222 +475,4 @@ export default {
 };
 </script>
 
-<style>
-/* Login Container */
-.login-container {
-  background: linear-gradient(135deg, #c16331 0%, #eec2aa 100%);
-  position: relative;
-  overflow: hidden;
-}
-.login-container::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  opacity: 0.1;
-}
-
-/* Login Card */
-.login-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  width: 100%;
-  max-width: 480px;
-  position: relative;
-  overflow: hidden;
-}
-.login-bg-pattern {
-  position: absolute;
-  top: -50px;
-  right: -50px;
-  width: 100px;
-  height: 100px;
-  background: linear-gradient(45deg, #c16331, #c16331);
-  border-radius: 100%;
-  opacity: 0.1;
-}
-
-/* Login Icon */
-.login-icon {
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(135deg, #c16331 0%, #eec2aa 100%);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  box-shadow: 0 10px 30px rgba(74, 144, 226, 0.3);
-}
-.login-icon i {
-  font-size: 2rem;
-  color: white;
-}
-
-/* Typography */
-.login-title {
-  color: #2d3748;
-  font-weight: 700;
-  font-size: 1.8rem;
-}
-.login-subtitle {
-  color: #718096;
-  margin-bottom: 0;
-  font-size: 0.95rem;
-}
-
-/* Inputs */
-.custom-input {
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 1rem;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.9);
-}
-.custom-input:focus {
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
-  background: white;
-}
-.custom-input.is-invalid {
-  border-color: #e53e3e;
-  box-shadow: 0 0 0 0.2rem rgba(229, 62, 62, 0.25);
-}
-.form-floating > label {
-  color: #718096;
-  font-size: 0.9rem;
-}
-.form-floating > .form-control:focus ~ label,
-.form-floating > .form-control:not(:placeholder-shown) ~ label {
-  color: #4a90e2;
-  transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
-}
-
-/* Buttons */
-.btn-login {
-  background: linear-gradient(135deg, #c16331 0%, #c16331 100%);
-  border: none;
-  border-radius: 12px;
-  color: white;
-  font-weight: 600;
-  font-size: 1.1rem;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-.btn-login::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 0, 0, 0.2),
-    transparent
-  );
-  transition: left 0.5s;
-}
-.btn-login:hover::before {
-  left: 100%;
-}
-.btn-login:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(74, 144, 226, 0.4);
-}
-.btn-login:active {
-  transform: translateY(0);
-}
-.btn-login:disabled {
-  background: #cbd5e0;
-  cursor: not-allowed;
-  transform: none;
-}
-.btn-login:disabled:hover {
-  box-shadow: none;
-  transform: none;
-}
-
-/* Alerts */
-.alert-danger {
-  background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
-  border: 1px solid #fc8181;
-  color: #742a2a;
-  border-radius: 12px;
-  font-size: 0.9rem;
-}
-.alert-success {
-  background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
-  border: 1px solid #68d391;
-  color: #22543d;
-  border-radius: 12px;
-  font-size: 0.9rem;
-}
-
-/* Toast */
-.welcome-notification {
-  background: linear-gradient(135deg, #68d391 0%, #38a169 100%);
-  color: white;
-  padding: 1rem 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(56, 161, 105, 0.3);
-  font-weight: 500;
-  z-index: 1050;
-  animation: slideInRight 0.5s ease-out;
-}
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* Misc */
-.nav-link.active {
-  background-color: #6c757d;
-  color: white;
-  border-radius: 5px;
-}
-body {
-  transition: background-color 0.3s, color 0.3s;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .login-card {
-    margin: 1rem;
-    padding: 2rem 1.5rem !important;
-  }
-  .login-icon {
-    width: 60px;
-    height: 60px;
-  }
-  .login-icon i {
-    font-size: 1.5rem;
-  }
-  .login-title {
-    font-size: 1.5rem;
-  }
-}
-
-/* Spinner */
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-.fa-spinner.fa-spin {
-  animation: spin 1s linear infinite;
-}
-</style>
+<style scoped src="./views/app.css"></style>
