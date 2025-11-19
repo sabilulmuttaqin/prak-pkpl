@@ -56,7 +56,7 @@ class TransaksiController extends Controller
         }
 
         //upload image
-        $image = $request->file('image');
+        $image = $request->file('bukti_transfer');
         $image->storeAs('public/bukti_transfer', $image->hashName());
 
         //create post

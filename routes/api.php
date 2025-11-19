@@ -13,3 +13,4 @@ Route::apiResource('/cat_toys', App\Http\Controllers\Api\catToyController::class
 Route::apiResource('/transaksis', App\Http\Controllers\Api\TransaksiController::class);
 Route::patch('/transaksis/{id}/status', [TransaksiController::class, 'updateStatus']);
 Route::delete('/transaksis/{id}', [TransaksiController::class, 'destroy']); // pastikan ada
+Route::put('/transaksis/{id}/status', [TransaksiController::class, 'updateStatus']);
