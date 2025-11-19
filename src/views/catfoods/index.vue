@@ -35,10 +35,19 @@ onMounted(() => {
 });
 
 // Method deletePost
+// const deletePost = async (id) => {
+//   await api.delete(`/cat_foods/${id}`).then(() => {
+//     fetchDataPosts();
+//   });
+// };
+
 const deletePost = async (id) => {
-  await api.delete(`/cat_foods/${id}`).then(() => {
-    fetchDataPosts();
-  });
+  try {
+    await api.delete(`/cat_foods/${id}`);
+    await fetchDataPosts();
+  } catch (error) {
+    console.error("Gagal menghapus data:", error);
+  }
 };
 </script>
 

@@ -1,70 +1,112 @@
 <script setup>
-//import ref
 import { ref, onMounted } from "vue";
-
-//import router
 import { useRouter, useRoute } from "vue-router";
-
-//import api
 import api from "../../api";
 
-//init router
 const router = useRouter();
-
-//init route
 const route = useRoute();
 
-//define state
 const product_name = ref("");
 const image = ref("");
 const description = ref("");
 const stock = ref("");
 const price = ref("");
+const errors = ref({});
 
-const errors = ref([]);
-//onMounted
+// fetch data by id
 onMounted(async () => {
-  //fetch detail data post by ID
-  await api.get(`/cat_foods/${route.params.id}`).then((response) => {
-    //set response data to state
-    product_name.value = response.data.data.product_name;
-    description.value = response.data.data.description;
-
-    stock.value = response.data.data.stock;
-    price.value = response.data.data.price;
-  });
+  try {
+    const response = await api.get(`/cat_foods/${route.params.id}`);
+    const data = response.data.data;
+    product_name.value = data.product_name;
+    description.value = data.description;
+    stock.value = data.stock;
+    price.value = data.price;
+  } catch (error) {
+    console.error("Gagal memuat data:", error);
+  }
 });
 
-//method for handle file changes
+// handle file input
 const handleFileChange = (e) => {
-  //assign file to state
   image.value = e.target.files[0];
 };
 
-//method "updatePost"
-const updatePost = async () => {
-  //init formData
-  let formData = new FormData();
+// deteksi emoji
+const containsEmoji = (text) => {
+  const emojiRegex =
+    /([\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA70}-\u{1FAFF}]|[\u{1F1E6}-\u{1F1FF}])/gu;
+  return emojiRegex.test(text);
+};
 
-  //assign state value to formData
+// validasi FE
+const validateForm = () => {
+  errors.value = {};
+
+  if (!product_name.value) {
+    errors.value.product_name = ["Product name wajib diisi."];
+  }
+
+  if (image.value) {
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/jpg",
+      "image/gif",
+      "image/svg+xml",
+    ];
+    if (!allowedTypes.includes(image.value.type)) {
+      errors.value.image = [
+        "Format gambar harus jpeg, png, jpg, gif, atau svg.",
+      ];
+    } else if (image.value.size > 2048 * 1024) {
+      errors.value.image = ["Ukuran gambar maksimal 2MB."];
+    }
+  }
+
+  if (!description.value) {
+    errors.value.description = ["Deskripsi wajib diisi."];
+  } else {
+    if (description.value.length < 20) {
+      errors.value.description = ["Deskripsi minimal 20 karakter."];
+    } else if (description.value.length > 200) {
+      errors.value.description = ["Deskripsi maksimal 200 karakter."];
+    } else if (containsEmoji(description.value)) {
+      errors.value.description = ["Deskripsi tidak boleh mengandung emoji."];
+    }
+  }
+
+  if (!stock.value) {
+    errors.value.stock = ["Stok wajib diisi."];
+  }
+
+  if (!price.value) {
+    errors.value.price = ["Harga wajib diisi."];
+  }
+
+  return Object.keys(errors.value).length === 0;
+};
+
+// update data
+const updatePost = async () => {
+  if (!validateForm()) return;
+
+  let formData = new FormData();
   formData.append("product_name", product_name.value);
-  formData.append("image", image.value);
+  if (image.value) formData.append("image", image.value);
   formData.append("description", description.value);
   formData.append("stock", stock.value);
   formData.append("price", price.value);
   formData.append("_method", "PATCH");
 
-  //store data with API
-  await api
-    .post(`/cat_foods/${route.params.id}`, formData)
-    .then(() => {
-      //redirect
-      router.push({ path: "/admin/catfoods" });
-    })
-    .catch((error) => {
-      //assign response error data to state "errors"
-      errors.value = error.response.data;
-    });
+  try {
+    await api.post(`/cat_foods/${route.params.id}`, formData);
+    router.push({ path: "/admin/catfoods" });
+  } catch (error) {
+    errors.value = error.response?.data || {
+      general: ["Terjadi kesalahan saat menyimpan data."],
+    };
+  }
 };
 </script>
 
@@ -73,11 +115,12 @@ const updatePost = async () => {
     <div class="row">
       <div class="col-md-12">
         <h4 class="text-center text-uppercase mb-4 border-bottom pb-3">
-          Edit Cat Foods
+          Edit Cat Food
         </h4>
         <div class="card border-0 rounded shadow">
           <div class="card-body">
             <form @submit.prevent="updatePost()">
+              <!-- Product name -->
               <div class="mb-3">
                 <label class="form-label fw-bold">Product name</label>
                 <input
@@ -91,6 +134,7 @@ const updatePost = async () => {
                 </div>
               </div>
 
+              <!-- Image -->
               <div class="mb-3">
                 <label class="form-label fw-bold">Image</label>
                 <input
@@ -103,6 +147,7 @@ const updatePost = async () => {
                 </div>
               </div>
 
+              <!-- Description -->
               <div class="mb-3">
                 <label class="form-label fw-bold">Description</label>
                 <textarea
@@ -116,12 +161,13 @@ const updatePost = async () => {
                 </div>
               </div>
 
+              <!-- Stock -->
               <div class="mb-3">
                 <label class="form-label fw-bold">Stock</label>
                 <input
                   type="number"
                   class="form-control"
-                  v-model="stock"
+                  v-model.number="stock"
                   placeholder="Enter Stock"
                 />
                 <div v-if="errors.stock" class="alert alert-danger mt-2">
@@ -129,12 +175,13 @@ const updatePost = async () => {
                 </div>
               </div>
 
+              <!-- Price -->
               <div class="mb-3">
                 <label class="form-label fw-bold">Price</label>
                 <input
                   type="number"
                   class="form-control"
-                  v-model="price"
+                  v-model.number="price"
                   placeholder="Enter Price"
                 />
                 <div v-if="errors.price" class="alert alert-danger mt-2">
@@ -142,6 +189,7 @@ const updatePost = async () => {
                 </div>
               </div>
 
+              <!-- Button -->
               <button
                 type="submit"
                 class="btn btn-md btn-primary rounded-sm shadow border-0"
