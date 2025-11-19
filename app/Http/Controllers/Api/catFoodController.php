@@ -13,36 +13,36 @@ class catFoodController extends Controller
 {
     public function index()
     {
-        //get all posts 
+        //get all posts
         $posts = cat_food::latest()->paginate(5);
 
-        //return collection of posts as a resource 
+        //return collection of posts as a resource
         return new catFoodResource(true, 'List Data Cat Food', $posts);
     }
 
 
     public function store(Request $request)
     {
-        //define validation rules 
+        //define validation rules
         $validator = Validator::make($request->all(), [
             'product_name'     => 'required',
             'image'     => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'description'   => 'required',
+            'description' => 'required|min:20|max:200',
             'stock'   => 'required',
             'price'   => 'required',
         ]);
 
 
-        //check if validation fails 
+        //check if validation fails
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
-        //upload image 
+        //upload image
         $image = $request->file('image');
         $image->storeAs('public/cat_foods', $image->hashName());
 
-        //create post 
+        //create post
         $post = cat_food::create([
             'product_name' => $request->product_name,
             'image'     => $image->hashName(),
@@ -50,17 +50,17 @@ class catFoodController extends Controller
             'stock'     => $request->stock,
             'price'     => $request->price,
         ]);
-        //return response 
+        //return response
         return new catFoodResource(true, 'Data Cat Food Berhasil Ditambahkan!', $post);
     }
 
 
     public function show($id)
     {
-        //find post by ID 
+        //find post by ID
         $post = cat_food::find($id);
 
-        //return single post as a resource 
+        //return single post as a resource
         return new catFoodResource(true, 'Detail Data Post!', $post);
     }
     public function update(Request $request, $id)
@@ -70,7 +70,7 @@ class catFoodController extends Controller
             'product_name'     => 'required',
             'stock'   => 'required',
             'price'   => 'required',
-            'description'   => 'required',
+            'description' => 'required|min:20|max:200',
         ]);
 
         //check if validation fails
