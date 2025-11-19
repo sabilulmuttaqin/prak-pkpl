@@ -1,9 +1,12 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import axios from "axios";
 
 const catFoodProducts = ref([]);
 const catToyProducts = ref([]);
+
+const catFoodCount = computed(() => catFoodProducts.value.length);
+const catToyCount = computed(() => catToyProducts.value.length);
 
 const fetchCatFoodData = async () => {
   try {
@@ -43,11 +46,18 @@ onMounted(() => {
       </div>
     </div>
     <!-- Cat Food Section -->
+
     <div class="row mb-4">
       <div class="col-12">
-        <h2 class="mb-4 fs-3">Cat Food Products</h2>
+        <h2 class="mb-4 fs-3 d-flex justify-content-between align-items-center">
+          <span>Cat Food Products</span>
+          <span class="badge rounded-pill count-badge">
+            {{ catFoodCount }} product
+          </span>
+        </h2>
       </div>
     </div>
+
     <!-- Cat Food List Group -->
     <div class="row mb-4">
       <div class="col-12">
@@ -80,9 +90,14 @@ onMounted(() => {
     </div>
 
     <!-- Cat Toy Section -->
-    <div class="row mb-4 mt-5">
+    <div class="row mb-4">
       <div class="col-12">
-        <h2 class="mb-4 fs-3">Cat Toy Products</h2>
+        <h2 class="mb-4 fs-3 d-flex justify-content-between align-items-center">
+          <span>Cat Toy Products</span>
+          <span class="badge rounded-pill count-badge">
+            {{ catToyCount }} product
+          </span>
+        </h2>
       </div>
     </div>
     <!-- Cat Toy List Group -->
@@ -122,6 +137,7 @@ onMounted(() => {
 /* Styling untuk List Group Item */
 .list-group-item {
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: #ffffff;
 }
 
 .list-group-item img {
@@ -145,5 +161,13 @@ onMounted(() => {
 h2 {
   border-bottom: 0.5px solid #505050; /* Menambahkan garis bawah */
   padding-bottom: 20px; /* Memberikan ruang antara teks dan garis */
+}
+
+.count-badge {
+  font-size: 0.72rem; /* kecilin teks */
+  padding: 0.5rem 1rem; /* kecilin padding */
+  line-height: 1; /* biar compact */
+  font-weight: 600; /* opsional */
+  background-color: #f9942a;
 }
 </style>

@@ -21,31 +21,43 @@ const errors = ref([]);
 
 //method for handle file changes
 const handleFileChange = (e) => {
-  //assign file to state
   image.value = e.target.files[0];
+};
+
+// fungsi deteksi emoji (tanpa hapus)
+const containsEmoji = (text) => {
+  const emojiRegex =
+    /([\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA70}-\u{1FAFF}]|[\u{1F1E6}-\u{1F1FF}])/gu;
+  return emojiRegex.test(text);
 };
 
 //method "storePost"
 const storePost = async () => {
+  errors.value = {}; // reset error sebelumnya
+
+  // cek apakah deskripsi berisi emoji
+  if (containsEmoji(description.value)) {
+    errors.value.description = [
+      "Deskripsi tidak boleh mengandung emoji. Hapus emoji sebelum menyimpan.",
+    ];
+    return; // hentikan proses submit
+  }
+
   //init formData
   let formData = new FormData();
 
-  //assign state value to formData
   formData.append("product_name", product_name.value);
   formData.append("image", image.value);
   formData.append("description", description.value);
   formData.append("stock", stock.value);
   formData.append("price", price.value);
 
-  //store data with API
   await api
     .post("/cat_foods", formData)
     .then(() => {
-      //redirect
       router.push({ path: "/admin/catfoods" });
     })
     .catch((error) => {
-      //assign response error data to state "errors"
       errors.value = error.response.data;
     });
 };

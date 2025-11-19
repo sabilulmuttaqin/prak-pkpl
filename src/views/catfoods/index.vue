@@ -1,51 +1,91 @@
 <script setup>
-//import ref and onMounted
-import { ref, onMounted } from "vue";
-
-//import api
+import { ref, onMounted, computed } from "vue";
 import api from "../../api";
 
-//define state
+// Define state
 const posts = ref([]);
+const searchQuery = ref("");
+const showLowStockOnly = ref(false);
 
-//method fetchDataPosts
+// Method fetchDataPosts
 const fetchDataPosts = async () => {
   try {
     const response = await api.get("/cat_foods");
-    console.log(response.data); // Log seluruh response untuk memverifikasi
-    posts.value = response.data.data.data; // Mengakses data produk dengan benar
+    console.log(response.data);
+    posts.value = response.data.data.data;
   } catch (error) {
     console.error("Error fetching data:", error);
   }
 };
 
-//run hook "onMounted"
+// Computed filtered posts
+const filteredPosts = computed(() => {
+  return posts.value.filter((post) => {
+    const matchesSearch = post.product_name
+      .toLowerCase()
+      .includes(searchQuery.value.toLowerCase());
+    const matchesStockFilter = showLowStockOnly.value ? post.stock < 5 : true;
+    return matchesSearch && matchesStockFilter;
+  });
+});
+
+// Run hook "onMounted"
 onMounted(() => {
-  //call method "fetchDataPosts"
   fetchDataPosts();
 });
 
-//method deletePost
+// Method deletePost
 const deletePost = async (id) => {
-  //delete post with API
   await api.delete(`/cat_foods/${id}`).then(() => {
-    //call method "fetchDataPosts"
     fetchDataPosts();
   });
 };
 </script>
+
 <template>
   <div class="container mb-5">
     <div class="row">
       <div class="col-md-12">
         <router-link
           :to="{ name: 'catfoods.create' }"
-          class="btn btn-md btn-success rounded shadow mb-3"
+          class="btn btn-md btn-success rounded shadow-sm mb-3"
         >
           Add New Product
         </router-link>
 
-        <div class="card border-0 rounded shadow">
+        <!-- Search and Filter Section -->
+        <div class="card border-0 rounded shadow-sm-sm mb-3">
+          <div class="card-body px-0">
+            <div class="row align-items-center">
+              <div class="col-md-8">
+                <input
+                  v-model="searchQuery"
+                  type="text"
+                  class="form-control"
+                  placeholder="Cari nama produk..."
+                />
+              </div>
+              <div class="col-md-4 d-flex justify-content-end">
+                <div class="form-check">
+                  <input
+                    v-model="showLowStockOnly"
+                    class="form-check-input"
+                    type="checkbox"
+                    id="lowStockFilter"
+                  />
+                  <label
+                    class="form-check-label fw-semibold"
+                    for="lowStockFilter"
+                  >
+                    Tampilkan Stok < 5
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card border-0 rounded shadow-sm">
           <div class="card-body">
             <table class="table table-hover table-striped">
               <thead class="">
@@ -59,14 +99,14 @@ const deletePost = async (id) => {
                 </tr>
               </thead>
               <tbody>
-                <tr v-if="posts.length === 0">
+                <tr v-if="filteredPosts.length === 0">
                   <td colspan="6" class="text-center">
                     <div class="alert alert-warning mb-0">
                       Data Not Available!
                     </div>
                   </td>
                 </tr>
-                <tr v-else v-for="(post, index) in posts" :key="index">
+                <tr v-else v-for="(post, index) in filteredPosts" :key="index">
                   <td>{{ post.product_name }}</td>
                   <td class="text-center">
                     <img

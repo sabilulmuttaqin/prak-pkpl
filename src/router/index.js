@@ -49,6 +49,12 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "edit" */ "../views/cattoys/edit.vue"),
   },
+  {
+    path: "/admin/orders/order",
+    name: "orders.order",
+    component: () =>
+      import(/* webpackChunkName: "edit" */ "../views/orders/order.vue"),
+  },
 ];
 
 //create router
