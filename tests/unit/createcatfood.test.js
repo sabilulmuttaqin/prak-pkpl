@@ -13,9 +13,6 @@ vi.mock("vue-router", () => ({
   useRouter: () => ({ push: vi.fn() }),
 }));
 
-// Tambahkan ini untuk menghindari error HTTP request
-global.fetch = vi.fn();
-
 describe("CreateCatFood.vue", () => {
   beforeEach(() => {
     vi.clearAllMocks();

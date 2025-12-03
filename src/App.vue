@@ -249,7 +249,7 @@
             <i class="fas fa-sun me-2" v-if="isDarkMode"></i>
             Mode
           </button> -->
-          <button class="btn btn-danger w-100" @click="handleLogout">
+          <button class="btn btn-info w-100" @click="handleLogout">
             <i class="fas fa-sign-out-alt me-2"></i> Logout
           </button>
         </div>
@@ -381,12 +381,15 @@ export default {
           this.infoMessage = "Registrasi berhasil. Kamu sudah login.";
           this.showWelcomeNotification();
           this.refreshRemainingCodes();
+          this.$router.push("/admin");
         } else {
           const res = await login(this.name, this.email, this.password);
           this.currentUsername = res.username;
           this.isAuthenticated = authStatus();
           this.infoMessage = "Login berhasil.";
           this.showWelcomeNotification();
+          // Arahkan ke halaman admin
+          this.$router.push("/admin");
         }
       } catch (err) {
         this.hasError = true;
@@ -451,6 +454,7 @@ export default {
       this.infoMessage = "";
       this.resetFieldErrors();
       this.refreshRemainingCodes();
+      window.location.href = "/";
     },
     showWelcomeNotification() {
       this.showWelcome = true;
